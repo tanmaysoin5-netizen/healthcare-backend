@@ -83,7 +83,7 @@
   </div>
 
   <script>
-    const AUTH_API = "http://localhost:5000/auth";
+    const AUTH_API = "https://healthcare-app-2025-ta9n.onrender.com/auth";
     const signupForm = document.getElementById("signupForm");
     const loginForm = document.getElementById("loginForm");
     const messageDiv = document.getElementById("message");
@@ -116,7 +116,7 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
   const password = document.getElementById("signupPassword").value;
   const role = document.getElementById("signupRole").value;
 
-  const res = await fetch("http://localhost:5000/auth/register", {
+  const res = await fetch('${AUTH_API}/register', {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name, email, password, role }),
@@ -140,7 +140,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   const email = document.getElementById("loginEmail").value;
   const password = document.getElementById("loginPassword").value;
 
-  const res = await fetch("http://localhost:5000/auth/login", {
+  const res = await fetch('${AUTH_API}/login', {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
