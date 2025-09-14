@@ -14,13 +14,13 @@ app.use(cors());
 require("dotenv").config();
 
 // ✅ Connect MongoDB
-mongoose.connect("mongodb+srv://healthuser:MyStrongPassword2025@cluster0.5t2oxca.mongodb.net/healtcare?retryWrites=true&w=majority&appName=Cluster0", {
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
 .then(() => console.log("✅ MongoDB Atlas Connected"))
 .catch(err => console.error("❌ MongoDB Error:", err));
-  
+
 /* -------------------- MODELS -------------------- */
 // ✅ Patient Model
 const PatientSchema = new mongoose.Schema({
