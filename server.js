@@ -168,19 +168,15 @@ app.delete("/patients/:id", authMiddleware, async (req, res) => {
 });
 
 /* -------------------- FRONTEND -------------------- */
-// ✅ Serve frontend (correct path inside project)
+// ✅ Serve frontend (correct path)
 app.use(express.static(path.join(__dirname, "frontend")));
 
-// Root route -> login page
 app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "frontend", "login.html"));
 });
-
-// Route for index
 app.get("/index.html", (_req, res) => {
   res.sendFile(path.join(__dirname, "frontend", "index.html"));
 });
-
 
 /* -------------------- START SERVER -------------------- */
 app.listen(5000, () => console.log("🚀 API running on http://localhost:5000"));
