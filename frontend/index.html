@@ -238,41 +238,43 @@
       </table>
     </div>
   </div>
-
   <script>
     // 🔒 Authentication Check
     const token = localStorage.getItem("token");
     if (!token) {
       window.location.href = "login.html";
     }
-
-    const API_URL = "http://localhost:5000/patients";
+  
+    // 🌐 Replace with your actual Render backend URL
+    const API_URL = "https://healthcare-app-2025-ta9n.onrender.com/patients";
+  
     let allPatients = [];
-
+  
     function logout() {
       localStorage.removeItem("token");
       window.location.href = "login.html";
     }
-
+  
     function showMessage(text, success = true) {
       const msgBox = document.getElementById("message");
       msgBox.innerText = text;
       msgBox.style.color = success ? "green" : "red";
       setTimeout(() => msgBox.innerText = "", 3000);
     }
-
+  
+    // 📌 Fetch Patients
     async function fetchPatients() {
       document.getElementById("loading").style.display = "block";
       try {
-        const res = await fetch("http://localhost:5000/patients", {
+        const res = await fetch(API_URL, {
           headers: { "Authorization": "Bearer " + token }
         });
-
+  
         if (res.status === 401) {
           logout();
           return;
         }
-
+  
         allPatients = await res.json();
         displayPatients(allPatients);
       } catch (err) {
@@ -280,7 +282,8 @@
       }
       document.getElementById("loading").style.display = "none";
     }
-
+  
+    // 📌 Display Patients
     function displayPatients(patients) {
       document.getElementById("patientsTable").innerHTML = patients.map(p => `
         <tr>
@@ -300,13 +303,15 @@
         </tr>
       `).join("");
     }
-
+  
+    // 📌 Search Patients
     function filterPatients() {
       const searchValue = document.getElementById("searchBox").value.toLowerCase();
       const filtered = allPatients.filter(p => p.name.toLowerCase().includes(searchValue));
       displayPatients(filtered);
     }
-
+  
+    // 📌 Add Patient
     async function addPatient() {
       const name = document.getElementById("name").value.trim();
       const age = document.getElementById("age").value.trim();
@@ -315,25 +320,24 @@
       const carePlan = document.getElementById("carePlan").value.trim();
   
       if (!name || !age || !condition) {
-        showMessage("Please fill all required fields before adding a patient", false);
+        showMessage("Please fill all required fields", false);
         return;
       }
-
+  
       const patient = { name, age, condition, medicalHistory, carePlan };
-
+  
       try {
-        const res = await fetch("http://localhost:5000/patients", {
-        method: "POST",
-        headers: { 
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + token
-  },
-  body: JSON.stringify(patient)
-});
-
-
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify(patient)
+        });
+  
         if (!res.ok) throw new Error();
-
+  
         showMessage("✅ Patient added successfully!");
         clearForm();
         fetchPatients();
@@ -341,16 +345,16 @@
         showMessage("❌ Failed to add patient", false);
       }
     }
-
+  
+    // 📌 Delete Patient
     async function deletePatient(id) {
       if (!confirm("Are you sure you want to delete this patient?")) return;
       try {
-        const res = await fetch(`http://localhost:5000/patients/${id}`, {
+        const res = await fetch(`${API_URL}/${id}`, {
           method: "DELETE",
           headers: { "Authorization": "Bearer " + token }
         });
-        
-
+  
         if (!res.ok) throw new Error();
         showMessage("Patient deleted successfully!");
         fetchPatients();
@@ -358,39 +362,41 @@
         showMessage("❌ Failed to delete patient", false);
       }
     }
-
+  
+    // 📌 Edit Patient
     function editPatient(id, name, age, condition, medicalHistory, carePlan, event) {
       document.getElementById("name").value = name;
       document.getElementById("age").value = age;
       document.getElementById("condition").value = condition;
       document.getElementById("medicalHistory").value = medicalHistory;
       document.getElementById("carePlan").value = carePlan;
-
+  
       document.querySelectorAll("#patientsTable tr").forEach(r => r.style.background = "");
       event.target.closest("tr").style.background = "#fff3cd";
-
+  
       const btn = document.querySelector("button.add");
       btn.innerText = "💾 Update";
       btn.className = "update";
       btn.setAttribute("onclick", `updatePatient('${id}')`);
     }
-
+  
+    // 📌 Update Patient
     async function updatePatient(id) {
       const name = document.getElementById("name").value.trim();
       const age = document.getElementById("age").value.trim();
       const condition = document.getElementById("condition").value.trim();
       const medicalHistory = document.getElementById("medicalHistory").value.trim();
       const carePlan = document.getElementById("carePlan").value.trim();
-
+  
       if (!name || !age || !condition) {
-        showMessage("Please fill all required fields before updating a patient", false);
+        showMessage("Please fill all required fields", false);
         return;
       }
-
+  
       const updatedPatient = { name, age, condition, medicalHistory, carePlan };
-
+  
       try {
-        const res = await fetch(`http://localhost:5000/patients/${id}`, {
+        const res = await fetch(`${API_URL}/${id}`, {
           method: "PUT",
           headers: { 
             "Content-Type": "application/json",
@@ -398,23 +404,23 @@
           },
           body: JSON.stringify(updatedPatient)
         });
-        
-
+  
         if (!res.ok) throw new Error();
-
+  
         showMessage("Patient updated successfully!");
         clearForm();
         fetchPatients();
       } catch {
         showMessage("❌ Failed to update patient", false);
       }
-
+  
       const btn = document.querySelector("button.update");
       btn.innerText = "➕ Add";
       btn.className = "add";
       btn.setAttribute("onclick", "addPatient()");
     }
-
+  
+    // 📌 Clear Form
     function clearForm() {
       document.getElementById("name").value = "";
       document.getElementById("age").value = "";
@@ -423,8 +429,10 @@
       document.getElementById("carePlan").value = "";
       document.getElementById("name").focus();
     }
-
+  
+    // 🚀 Load patients on page load
     fetchPatients();
   </script>
+  
 </body>
 </html>
