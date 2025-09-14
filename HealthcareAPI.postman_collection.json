@@ -1,0 +1,160 @@
+{
+  "info": {
+    "name": "Healthcare API",
+    "_postman_id": "12345678-abcd-efgh-ijkl-1234567890ab",
+    "description": "Collection for testing Healthcare API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Root - Check API",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": [""]
+        }
+      }
+    },
+    {
+      "name": "Auth - Register",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"123456\",\n  \"role\": \"doctor\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/auth/register",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["auth", "register"]
+        }
+      }
+    },
+    {
+      "name": "Auth - Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Save token automatically",
+              "var jsonData = pm.response.json();",
+              "if (jsonData.token) {",
+              "    pm.environment.set('authToken', jsonData.token);",
+              "    console.log('Token saved:', jsonData.token);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"123456\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/auth/login",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["auth", "login"]
+        }
+      }
+    },
+    {
+      "name": "Patients - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"John Doe\",\n  \"age\": 30,\n  \"condition\": \"Diabetes\",\n  \"medicalHistory\": \"High blood sugar for 5 years\",\n  \"carePlan\": \"Insulin and diet control\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/patients",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["patients"]
+        }
+      }
+    },
+    {
+      "name": "Patients - Get All",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }],
+        "url": {
+          "raw": "http://localhost:5000/patients",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["patients"]
+        }
+      }
+    },
+    {
+      "name": "Patients - Get by ID",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }],
+        "url": {
+          "raw": "http://localhost:5000/patients/{{patientId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["patients", "{{patientId}}"]
+        }
+      }
+    },
+    {
+      "name": "Patients - Update",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Updated Name\",\n  \"age\": 40,\n  \"condition\": \"Updated Condition\",\n  \"medicalHistory\": \"Updated Medical History\",\n  \"carePlan\": \"Updated Care Plan\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/patients/{{patientId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["patients", "{{patientId}}"]
+        }
+      }
+    },
+    {
+      "name": "Patients - Delete",
+      "request": {
+        "method": "DELETE",
+        "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }],
+        "url": {
+          "raw": "http://localhost:5000/patients/{{patientId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["patients", "{{patientId}}"]
+        }
+      }
+    }
+  ]
+}
