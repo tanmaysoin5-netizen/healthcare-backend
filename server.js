@@ -171,15 +171,14 @@ app.delete("/patients/:id", authMiddleware, async (req, res) => {
 
 /* -------------------- FRONTEND -------------------- */
 // ✅ Serve frontend (correct path)
-app.use(express.static(path.join(__dirname, "frontend")));
+app.use(express.static(path.join(--dirname, "frontend")));
 
 app.get("/", (_req, res) => {
-  res.sendFile(path.join(__dirname, "frontend", "login.html"));
+  res.sendFile(path.join(--dirname, "frontend", "login.html"));
 });
 app.get("/index.html", (_req, res) => {
-  res.sendFile(path.join(__dirname, "frontend", "index.html"));
+  res.sendFile(path.join(--dirname, "frontend", "index.html"));
 });
 
 /* -------------------- START SERVER -------------------- */
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(5000, () => console.log("🚀 API running on http://localhost:5000"));
