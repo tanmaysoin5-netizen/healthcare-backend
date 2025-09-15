@@ -3,10 +3,12 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
+require("dotenv").config();
+
 const router = express.Router();
 
 
-// REGISTER (Signup)
+// 🔹 REGISTER (Signup)
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -31,7 +33,8 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// LOGIN
+
+// 🔹 LOGIN
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -48,10 +51,10 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
 
-    // Generate JWT
+    // Generate JWT (using .env secret)
     const token = jwt.sign(
       { id: user._id, role: user.role },
-      process.env.JWT_SECRET || "secretkey",
+      process.env.JWT_SECRET,   // ✅ always use .env
       { expiresIn: "1h" }
     );
 
@@ -60,7 +63,9 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ msg: "Server error", error: err.message });
   }
 });
-// ✅ GET ALL USERS (without password)
+
+
+// 🔹 GET ALL USERS (without password)
 router.get("/users", async (_req, res) => {
   try {
     const users = await User.find({}, "-password"); // exclude password field
@@ -71,7 +76,7 @@ router.get("/users", async (_req, res) => {
 });
 
 
-// ✅ GET USERS COUNT
+// 🔹 GET USERS COUNT
 router.get("/users/count", async (_req, res) => {
   try {
     const count = await User.countDocuments();
