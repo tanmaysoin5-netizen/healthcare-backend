@@ -185,7 +185,4 @@ app.get("/index.html", (_req, res) => {
 });
 
 /* -------------------- START SERVER -------------------- */
-const PORT = process.env.PORT || 5000;
-console.log(`Using PORT: ${PORT}`); // Log the port being used
-app.listen(PORT, () => console.log(`🚀 API running on http://localhost:${PORT}`));
 app.listen(5000, () => console.log(`🚀 API running on http://localhost:5000`));
