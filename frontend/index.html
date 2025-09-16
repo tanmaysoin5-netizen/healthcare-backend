@@ -337,7 +337,11 @@
           body: JSON.stringify(patient)
         });
   
-        if (!res.ok) throw new Error();
+        if (!res.ok) {
+          const errorMessage = await res.text();
+          console.error("Error:", errorMessage);
+          throw new Error();
+        }
   
         showMessage("✅ Patient added successfully!");
         clearForm();
@@ -440,3 +444,4 @@
 <footer style="text-align: center; padding: 20px; background: #0077b6; color: white; position: relative; bottom: 0; width: 100%;">
   <p>&copy; 2023 Healthcare App. All rights reserved.</p>
 </footer>
+
