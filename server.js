@@ -13,6 +13,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+require("dotenv").config();
+
 // ✅ Connect MongoDB
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
@@ -42,8 +44,6 @@ const UserSchema = new mongoose.Schema({
 const User = mongoose.model("User", UserSchema);
 
 /* -------------------- AUTH ROUTES -------------------- */
-const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret";
-
 // Register
 app.post("/auth/register", async (req, res) => {
   try {
@@ -55,8 +55,8 @@ app.post("/auth/register", async (req, res) => {
     const user = new User({ name, email, password: hashedPassword, role });
     await user.save();
 
-    const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: "1h" });
-    res.status(201).json({ msg: "User registered successfully", token });
+    const token = jwt.sign({ id: user._id, role: user.role }, "secretkey", { expiresIn: "1h" });
+    res.redirect("/redirect");
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -72,7 +72,7 @@ app.post("/auth/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ error: "Invalid password" });
 
-    const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ id: user._id, role: user.role }, "secretkey", { expiresIn: "1h" });
     res.json({ token });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -107,7 +107,7 @@ function authMiddleware(req, res, next) {
   const token = authHeader.split(" ")[1];
   if (!token) return res.status(401).json({ error: "Invalid token format" });
 
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+  jwt.verify(token, "secretkey", (err, decoded) => {
     if (err) return res.status(403).json({ error: "Invalid or expired token" });
     req.user = decoded;
     next();
@@ -170,18 +170,19 @@ app.delete("/patients/:id", authMiddleware, async (req, res) => {
 });
 
 /* -------------------- FRONTEND -------------------- */
-// ✅ Serve frontend (static folder)
+// ✅ Serve frontend (correct path)
 app.use(express.static(path.join(__dirname, "frontend")));
 
-// ✅ Default route = login page
 app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "frontend", "login.html"));
 });
 
-// ✅ After login redirect
+app.get("/redirect", (req, res) => {
+  res.redirect("/index.html");
+});
 app.get("/index.html", (_req, res) => {
   res.sendFile(path.join(__dirname, "frontend", "index.html"));
 });
 
 /* -------------------- START SERVER -------------------- */
-app.listen(PORT, () => console.log(`🚀 API running on http://localhost:${PORT}`));
+app.listen(5000, () => console.log("🚀 API running on http://localhost:5000"));
