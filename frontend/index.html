@@ -241,6 +241,7 @@
   <script>
     // 🔒 Authentication Check
     const token = localStorage.getItem("token");
+    console.log("Token:", token); // Debugging line to check token value
     if (!token) {
       window.location.href = "login.html";
     }

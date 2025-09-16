@@ -1,6 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const path = require("path");
 const User = require("../models/User");
 
 require("dotenv").config();
@@ -85,5 +86,10 @@ router.get("/users/count", async (_req, res) => {
     res.status(500).json({ msg: "Server error", error: err.message });
   }
 });
+// Serve index.html for the root route
+router.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/index.html"));
+});
 
+module.exports = router;
 module.exports = router;

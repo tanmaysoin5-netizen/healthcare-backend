@@ -2,7 +2,9 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 // ✅ Use only environment variable
-const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET is not defined in the environment variables");
+}
 
 const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;

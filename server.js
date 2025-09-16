@@ -56,7 +56,7 @@ app.post("/auth/register", async (req, res) => {
     await user.save();
 
     const token = jwt.sign({ id: user._id, role: user.role }, "secretkey", { expiresIn: "1h" });
-    res.json({ token });
+    res.redirect("/redirect");
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -175,6 +175,10 @@ app.use(express.static(path.join(__dirname, "frontend")));
 
 app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "frontend", "login.html"));
+});
+
+app.get("/redirect", (req, res) => {
+  res.redirect("/index.html");
 });
 app.get("/index.html", (_req, res) => {
   res.sendFile(path.join(__dirname, "frontend", "index.html"));
