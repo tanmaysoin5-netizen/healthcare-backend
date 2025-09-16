@@ -122,6 +122,16 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
     body: JSON.stringify({ name, email, password, role }),
   });
 
+  if (!res.ok) {
+    const errorData = await res.json();
+    showMessage(errorData.error || "Signup failed");
+    return;
+  }
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email, password, role }),
+  });
+
   const data = await res.json();
   if (res.ok) {
     alert("Signup successful!");
@@ -130,6 +140,16 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
     window.location.href = "index.html";
   } else {
     alert(data.error || "Signup failed");
+  const res = await fetch(`${AUTH_API}/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    showMessage(errorData.error || "Login failed");
+    return;
   }
 });
 
