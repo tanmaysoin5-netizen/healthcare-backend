@@ -1,8 +1,8 @@
 {
   "info": {
-    "name": "Healthcare API",
-    "_postman_id": "12345678-abcd-efgh-ijkl-1234567890ab",
-    "description": "Collection for testing Healthcare API",
+    "name": "Healthcare API (Render)",
+    "_postman_id": "abcd1234-5678-efgh-ijkl-9876543210ab",
+    "description": "Collection for testing Healthcare API deployed on Render",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -12,10 +12,9 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:5000/",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "5000",
+          "raw": "https://healthcare-app-2025-ta9n.onrender.com/",
+          "protocol": "https",
+          "host": ["healthcare-app-2025-ta9n", "onrender", "com"],
           "path": [""]
         }
       }
@@ -30,10 +29,9 @@
           "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"123456\",\n  \"role\": \"doctor\"\n}"
         },
         "url": {
-          "raw": "http://localhost:5000/auth/register",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "5000",
+          "raw": "https://healthcare-app-2025-ta9n.onrender.com/auth/register",
+          "protocol": "https",
+          "host": ["healthcare-app-2025-ta9n", "onrender", "com"],
           "path": ["auth", "register"]
         }
       }
@@ -64,10 +62,9 @@
           "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"123456\"\n}"
         },
         "url": {
-          "raw": "http://localhost:5000/auth/login",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "5000",
+          "raw": "https://healthcare-app-2025-ta9n.onrender.com/auth/login",
+          "protocol": "https",
+          "host": ["healthcare-app-2025-ta9n", "onrender", "com"],
           "path": ["auth", "login"]
         }
       }
@@ -85,10 +82,9 @@
           "raw": "{\n  \"name\": \"John Doe\",\n  \"age\": 30,\n  \"condition\": \"Diabetes\",\n  \"medicalHistory\": \"High blood sugar for 5 years\",\n  \"carePlan\": \"Insulin and diet control\"\n}"
         },
         "url": {
-          "raw": "http://localhost:5000/patients",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "5000",
+          "raw": "https://healthcare-app-2025-ta9n.onrender.com/patients",
+          "protocol": "https",
+          "host": ["healthcare-app-2025-ta9n", "onrender", "com"],
           "path": ["patients"]
         }
       }
@@ -99,10 +95,9 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }],
         "url": {
-          "raw": "http://localhost:5000/patients",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "5000",
+          "raw": "https://healthcare-app-2025-ta9n.onrender.com/patients",
+          "protocol": "https",
+          "host": ["healthcare-app-2025-ta9n", "onrender", "com"],
           "path": ["patients"]
         }
       }
@@ -113,10 +108,9 @@
         "method": "GET",
         "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }],
         "url": {
-          "raw": "http://localhost:5000/patients/{{patientId}}",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "5000",
+          "raw": "https://healthcare-app-2025-ta9n.onrender.com/patients/{{patientId}}",
+          "protocol": "https",
+          "host": ["healthcare-app-2025-ta9n", "onrender", "com"],
           "path": ["patients", "{{patientId}}"]
         }
       }
@@ -134,10 +128,9 @@
           "raw": "{\n  \"name\": \"Updated Name\",\n  \"age\": 40,\n  \"condition\": \"Updated Condition\",\n  \"medicalHistory\": \"Updated Medical History\",\n  \"carePlan\": \"Updated Care Plan\"\n}"
         },
         "url": {
-          "raw": "http://localhost:5000/patients/{{patientId}}",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "5000",
+          "raw": "https://healthcare-app-2025-ta9n.onrender.com/patients/{{patientId}}",
+          "protocol": "https",
+          "host": ["healthcare-app-2025-ta9n", "onrender", "com"],
           "path": ["patients", "{{patientId}}"]
         }
       }
@@ -148,10 +141,9 @@
         "method": "DELETE",
         "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }],
         "url": {
-          "raw": "http://localhost:5000/patients/{{patientId}}",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "5000",
+          "raw": "https://healthcare-app-2025-ta9n.onrender.com/patients/{{patientId}}",
+          "protocol": "https",
+          "host": ["healthcare-app-2025-ta9n", "onrender", "com"],
           "path": ["patients", "{{patientId}}"]
         }
       }
