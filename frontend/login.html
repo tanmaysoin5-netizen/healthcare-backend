@@ -108,75 +108,63 @@
 
     // ✅ Signup
      // Signup form handler
-document.getElementById("signupForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const name = document.getElementById("signupName").value;
-  const email = document.getElementById("signupEmail").value;
-  const password = document.getElementById("signupPassword").value;
-  const role = document.getElementById("signupRole").value;
-
-  const res = await fetch(`${AUTH_API}/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, email, password, role }),
-  });
-
-  if (!res.ok) {
-    const errorData = await res.json();
-    showMessage(errorData.error || "Signup failed");
-    return;
-  }
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, email, password, role }),
-  });
-
-  const data = await res.json();
-  if (res.ok) {
-    alert("Signup successful!");
-    // ✅ Save token
-    localStorage.setItem("token", data.token);
-    window.location.href = "index.html";
-  } else {
-    alert(data.error || "Signup failed");
-  const res = await fetch(`${AUTH_API}/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
-
-  if (!res.ok) {
-    const errorData = await res.json();
-    showMessage(errorData.error || "Login failed");
-    return;
-  }
-});
-
-// Login form handler
-document.getElementById("loginForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const email = document.getElementById("loginEmail").value;
-  const password = document.getElementById("loginPassword").value;
-
-  const res = await fetch(`${AUTH_API}/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
-
-  const data = await res.json();
-  if (res.ok) {
-    alert("Login successful!");
-    // ✅ Save token
-    localStorage.setItem("token", data.token);
-    window.location.href = "index.html";
-  } else {
-    alert(data.error || "Login failed");
-  }
-});
-
+     document.getElementById("signupForm").addEventListener("submit", async (e) => {
+       e.preventDefault();
+     
+       const name = document.getElementById("signupName").value;
+       const email = document.getElementById("signupEmail").value;
+       const password = document.getElementById("signupPassword").value;
+       const role = document.getElementById("signupRole").value;
+     
+       try {
+         const res = await fetch(`${AUTH_API}/register`, {
+           method: "POST",
+           headers: { "Content-Type": "application/json" },
+           body: JSON.stringify({ name, email, password, role }),
+         });
+     
+         const data = await res.json();
+         if (res.ok) {
+           alert("Signup successful!");
+           localStorage.setItem("token", data.token); // ✅ Save token
+           window.location.href = "index.html"; // redirect
+         } else {
+           alert(data.error || "Signup failed");
+         }
+       } catch (err) {
+         alert("Something went wrong during signup");
+         console.error(err);
+       }
+     });
+     
+     // Login form handler
+     document.getElementById("loginForm").addEventListener("submit", async (e) => {
+       e.preventDefault();
+     
+       const email = document.getElementById("loginEmail").value;
+       const password = document.getElementById("loginPassword").value;
+     
+       try {
+         const res = await fetch(`${AUTH_API}/login`, {
+           method: "POST",
+           headers: { "Content-Type": "application/json" },
+           body: JSON.stringify({ email, password }),
+         });
+     
+         const data = await res.json();
+         if (res.ok) {
+           alert("Login successful!");
+           localStorage.setItem("token", data.token); // ✅ Save token
+           window.location.href = "index.html"; // redirect
+         } else {
+           alert(data.error || "Login failed");
+         }
+       } catch (err) {
+         alert("Something went wrong during login");
+         console.error(err);
+       }
+     });
+     
   </script>
 </body>
 </html>
