@@ -65,7 +65,7 @@ app.post("/auth/register", async (req, res) => {
     await user.save();
 
     const token = jwt.sign({ id: user._id, role: user.role }, "secretkey", { expiresIn: "1h" });
-    res.redirect("/redirect");
+    res.json({ token });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
