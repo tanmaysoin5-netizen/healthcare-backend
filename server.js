@@ -20,8 +20,8 @@ mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log("✅ MongoDB Atlas Connected"))
-.catch(err => console.error("❌ MongoDB Error:", err));
+  .then(() => console.log("✅ MongoDB Atlas Connected"))
+  .catch(err => console.error("❌ MongoDB Error:", err));
 
 /* -------------------- MODELS -------------------- */
 // ✅ Patient Model
@@ -42,6 +42,15 @@ const UserSchema = new mongoose.Schema({
   role: { type: String, enum: ["doctor", "staff"], default: "staff" }
 });
 const User = mongoose.model("User", UserSchema);
+
+// ✅ Appointment Model
+const AppointmentSchema = new mongoose.Schema({
+  patientName: { type: String, required: true },
+  date: { type: String, required: true },
+  time: { type: String, required: true },
+  status: { type: String, enum: ["Scheduled", "Completed", "Cancelled"], default: "Scheduled" }
+});
+const Appointment = mongoose.model("Appointment", AppointmentSchema);
 
 /* -------------------- AUTH ROUTES -------------------- */
 // Register
@@ -149,6 +158,9 @@ app.get("/patients/:id", authMiddleware, async (req, res) => {
 
 // ✏️ Update patient
 app.put("/patients/:id", authMiddleware, async (req, res) => {
+  if (req.user.role !== "doctor") {
+    return res.status(403).json({ error: "Access denied. Only doctors can modify patient records." });
+  }
   try {
     const patient = await Patient.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!patient) return res.status(404).json({ error: "Patient not found" });
@@ -160,10 +172,77 @@ app.put("/patients/:id", authMiddleware, async (req, res) => {
 
 // ❌ Delete patient
 app.delete("/patients/:id", authMiddleware, async (req, res) => {
+  if (req.user.role !== "doctor") {
+    return res.status(403).json({ error: "Access denied. Only doctors can delete patient records." });
+  }
   try {
     const patient = await Patient.findByIdAndDelete(req.params.id);
     if (!patient) return res.status(404).json({ error: "Patient not found" });
     res.json({ message: "Patient deleted" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* -------------------- APPOINTMENT ROUTES -------------------- */
+// ➕ Schedule Appointment
+app.post("/appointments", authMiddleware, async (req, res) => {
+  try {
+    const appointment = new Appointment(req.body);
+    await appointment.save();
+    res.status(201).json(appointment);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// 📄 Get all appointments
+app.get("/appointments", authMiddleware, async (_req, res) => {
+  try {
+    const appointments = await Appointment.find().sort({ date: 1, time: 1 });
+    res.json(appointments);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ✏️ Update appointment status
+app.put("/appointments/:id", authMiddleware, async (req, res) => {
+  try {
+    const appointment = await Appointment.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!appointment) return res.status(404).json({ error: "Appointment not found" });
+    res.json(appointment);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// ❌ Delete appointment
+app.delete("/appointments/:id", authMiddleware, async (req, res) => {
+  try {
+    const appointment = await Appointment.findByIdAndDelete(req.params.id);
+    if (!appointment) return res.status(404).json({ error: "Appointment not found" });
+    res.json({ message: "Appointment deleted" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* -------------------- ANALYTICS ROUTES -------------------- */
+// 📊 Get Dashboard Analytics
+app.get("/analytics/stats", authMiddleware, async (_req, res) => {
+  try {
+    const totalPatients = await Patient.countDocuments();
+    const totalAppointments = await Appointment.countDocuments();
+    const upcomingAppointments = await Appointment.countDocuments({ status: "Scheduled" });
+    const totalStaff = await User.countDocuments();
+
+    res.json({
+      totalPatients,
+      totalAppointments,
+      upcomingAppointments,
+      totalStaff
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
