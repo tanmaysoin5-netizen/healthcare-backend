@@ -19,8 +19,14 @@ require("dotenv").config();
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 30000, // Wait 30 seconds before timing out
 })
-  .then(() => console.log("✅ MongoDB Atlas Connected"))
+  .then(() => {
+    console.log("✅ MongoDB Atlas Connected");
+    /* -------------------- START SERVER -------------------- */
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => console.log(`🚀 API running on port ${PORT}`));
+  })
   .catch(err => console.error("❌ MongoDB Error:", err));
 
 /* -------------------- MODELS -------------------- */
@@ -263,5 +269,4 @@ app.get("/index.html", (_req, res) => {
   res.sendFile(path.join(__dirname, "frontend", "index.html"));
 });
 
-/* -------------------- START SERVER -------------------- */
-app.listen(5000, () => console.log(`🚀 API running on http://localhost:5000`));
+// Server start logic is now handled after MongoDB connects at the top of the file.
